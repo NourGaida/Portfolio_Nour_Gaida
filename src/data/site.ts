@@ -6,7 +6,7 @@ export const site = {
   title: 'Nour Gaïda — AI Engineer & Researcher',
   description:
     'Nour Gaïda builds intelligent systems at the intersection of AI, healthcare and signal processing.',
-  url: 'https://github.com/NourGaida/Portfolio_Nour_Gaida.git', // keep identical to `site` in astro.config.mjs
+  url: 'https://nourgaida.vercel.app/', // keep identical to `site` in astro.config.mjs
   avatar: '/profile.jpg', // replace with /profile.jpg once you add public/profile.jpg
   tagline: 'I build intelligent systems at the intersection of AI, healthcare and signal processing.',
   role: "ICT Engineering Student · SUP'COM Tunisia",
