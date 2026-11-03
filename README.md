@@ -2,7 +2,7 @@
 
 ## Files
 - `experience.ts`: updated data model and entries, with a `logo` path for each organization.
-- `public/logos/*.svg`: eight local SVG logo placeholders.
+- `public/logos/*.svg`: eight local SVG logo placeholders Personal portfolio built with Astro.
 
 ## Add to your Astro project
 1. Copy the `public/logos` folder into your project's `public/` folder.
