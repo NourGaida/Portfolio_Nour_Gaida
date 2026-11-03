@@ -105,7 +105,7 @@ export const experience: ExperienceEntry[] = [
     organization: 'SUP’COM — École Supérieure des Communications de Tunis',
     role: 'ICT Engineering Student · Multimodal Information Application',
     period: 'Sep 2024 – Jan 2027',
-    logo: '/public/logos/supcom.png',
+    logo: '/logos/supcom.png',
     summary:
       'Engineering degree in Telecommunications and ICT, with a focus on artificial intelligence, machine learning, signal processing, and multimodal applications.',
     highlights: [],

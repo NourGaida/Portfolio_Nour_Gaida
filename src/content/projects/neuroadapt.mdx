@@ -1,25 +1,163 @@
 ---
-title: 'NeuroAdapt: Multimodal Brain MRI Segmentation'
-summary: 'Deep learning segmentation on multimodal brain MRI.'
-domain: 'Medical Imaging · Segmentation'
-stack: ['Deep Learning', 'Segmentation', 'Multimodal MRI']
+title: 'NeuroAdapt: Adaptive Multimodal Brain MRI Segmentation'
+summary: 'An explainable deep learning framework for brain tumor segmentation using multimodal MRI, adaptive feature fusion, and uncertainty estimation.'
+domain: 'Medical Imaging · Deep Learning · Segmentation'
+stack: ['PyTorch', '3D Deep Learning', 'Multimodal MRI', 'U-Net', 'Attention Mechanisms', 'Explainable AI']
 date: 2026-09-12
 order: 1
 featured: true
-draft: true
-# github: 'https://github.com/YOUR_USERNAME/neuroadapt'
+draft: false
+# github: 'https://github.com/NourGaida/Adaptive-and-Uncertainty-Aware-Brain-MRI-Segmentation-with-Foundation-Models.git'
 ---
 
-{/* This page is a draft and is hidden in production builds. Remove `draft: true` once it is written. */}
+## Overview
+
+NeuroAdapt is a research-oriented deep learning project focused on **multimodal brain tumor segmentation** from magnetic resonance imaging (MRI).
+
+The project explores how complementary information from four MRI sequences — **T1, T1ce, T2, and FLAIR** — can be combined to produce more reliable voxel-level tumor segmentation.
+
+Rather than treating all modalities as equally informative, NeuroAdapt investigates an adaptive fusion strategy that learns to capture modality-specific features and combine them according to their relevance.
+
+The long-term objective is to move beyond segmentation alone by providing additional information about model confidence, modality contributions, and tumor-region measurements.
+
+![NeuroAdapt multimodal MRI illustration](/images/neuroadapt/multimodal-mri-overview.png)
+
+<small>Conceptual illustration of multimodal MRI inputs and the intended segmentation outputs. Not an actual model prediction.</small>
 
 ## Problem and motivation
 
+Brain tumor segmentation is a challenging medical imaging task. Tumors can have irregular boundaries, heterogeneous tissue composition, and substantial variation in appearance across patients.
+
+Each MRI sequence captures complementary anatomical or pathological information:
+
+- **T1:** Provides anatomical context and structural information.
+- **T1ce:** Highlights contrast-enhancing tumor components.
+- **T2:** Provides information about tissue water content and abnormalities.
+- **FLAIR:** Helps reveal edema and other hyperintense pathological regions.
+
+Combining these sequences can provide a more comprehensive representation than relying on a single modality.
+
+However, multimodal learning introduces several challenges:
+
+- Learning complementary rather than redundant representations.
+- Handling differences in intensity and image characteristics.
+- Preserving spatial information during feature fusion.
+- Maintaining robustness when one or more modalities are unavailable or less informative.
+- Understanding the confidence and contribution of each modality in the final prediction.
+
+**NeuroAdapt investigates these challenges through adaptive multimodal representation learning and uncertainty-aware segmentation.**
+
 ## Technical approach
+
+The proposed architecture follows four main stages.
+
+### 1. Multimodal MRI preprocessing
+
+The four MRI sequences are prepared and spatially aligned to ensure that corresponding voxels represent the same anatomical locations.
+
+The preprocessing pipeline is designed to include:
+
+- MRI volume loading and quality inspection.
+- Spatial registration and resampling.
+- Intensity normalization.
+- Brain-region cropping and patch extraction.
+- Data augmentation to improve generalization.
+
+### 2. Pretrained medical vision encoder
+
+A pretrained medical imaging encoder is explored as the feature extraction backbone.
+
+Its purpose is to learn meaningful anatomical and pathological representations from the MRI volumes while reducing the need to learn all visual features from scratch.
+
+The initial implementation can also use a CNN-based encoder as a baseline or fallback.
+
+### 3. Adaptive modality fusion
+
+This is the central research component of NeuroAdapt.
+
+Instead of simply concatenating the four modality representations, the proposed fusion module explores:
+
+- Modality-specific feature extraction.
+- Spatial attention to emphasize relevant regions.
+- Reliability-aware weighting of modality features.
+- Modality-availability masks to account for missing inputs.
+
+The objective is to allow the network to adapt how information from T1, T1ce, T2, and FLAIR contributes to the final representation.
+
+### 4. Segmentation decoder
+
+A lightweight U-Net-style decoder uses the fused representations to generate voxel-level segmentation predictions.
+
+The intended outputs include:
+
+- **Whole Tumor (WT):** The complete tumor region.
+- **Tumor Core (TC):** The tumor core, excluding surrounding edema.
+- **Enhancing Tumor (ET):** The contrast-enhancing tumor region.
+
+Additional explainability outputs are also being explored:
+
+- Voxel-level uncertainty maps.
+- Modality-contribution visualizations.
+- Quantitative tumor-region measurements.
 
 ## Dataset and preprocessing
 
-## Experiments and results
+The project plans to use the **BraTS (Brain Tumor Segmentation) dataset**, a benchmark for multimodal brain tumor segmentation.
+
+Each subject provides four complementary MRI sequences:
+
+| Modality | Information |
+|---|---|
+| T1 | Anatomical structure |
+| T1ce | Contrast-enhancing regions |
+| T2 | Tissue and fluid abnormalities |
+| FLAIR | Edema and hyperintense regions |
+
+The preprocessing pipeline will ensure consistent spatial dimensions, intensity normalization, and alignment across modalities.
+
+Data partitioning will be performed at the **patient level** to prevent slices or patches from the same subject leaking across training, validation, and test sets.
+
+## Experiments and evaluation
+
+The experimental plan is designed to evaluate the contribution of each architectural component independently.
+
+| Experiment | Objective |
+|---|---|
+| E1 — Baseline | Establish a four-channel U-Net baseline. |
+| E2 — Pretrained encoder | Evaluate pretrained feature representations. |
+| E3 — Adaptive fusion | Measure the contribution of attention-based modality fusion. |
+| E4 — Modality dropout | Investigate robustness to missing MRI sequences. |
+| E5 — Uncertainty estimation | Analyze prediction confidence and uncertain regions. |
+
+The evaluation will consider:
+
+- **Dice Similarity Coefficient (DSC):** Measures overlap between predicted and reference segmentation.
+- **Hausdorff Distance 95 (HD95):** Evaluates boundary discrepancies.
+- **Sensitivity and precision:** Assess tumor-region detection.
+- **Region-wise evaluation:** Separate assessment of WT, TC, and ET.
+
+Qualitative analysis will include MRI slices, ground-truth masks, predicted segmentation overlays, and uncertainty visualizations.
+
+*Quantitative results will be added after the experiments have been completed.*
 
 ## Challenges and lessons learned
 
+The project addresses several important research challenges:
+
+- **Multimodal representation learning:** Combining complementary information without losing modality-specific characteristics.
+- **Class imbalance:** Learning from tumor regions that occupy a relatively small portion of MRI volumes.
+- **Spatial consistency:** Preserving voxel-level alignment throughout the architecture.
+- **Missing modalities:** Investigating how the model behaves when an MRI sequence is unavailable.
+- **Model reliability:** Distinguishing confident predictions from uncertain segmentation regions.
+
+These challenges motivate the exploration of adaptive fusion, modality dropout, and uncertainty estimation.
+
 ## Repository and demo
+
+The implementation, experiments, and documentation will be organized in the project repository.
+
+- **Source code:** [GitHub — NeuroAdapt](https://github.com/YOUR_USERNAME/NeuroAdapt)
+- **Experiments:** Training configurations, evaluation scripts, and qualitative visualizations.
+- **Documentation:** Architecture, preprocessing, and experimental methodology.
+
+*Project status: Research and implementation in progress.*
