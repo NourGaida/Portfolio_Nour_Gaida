@@ -1,0 +1,54 @@
+---
+title: 'NILM: Disaggregating Household Energy with BiLSTM and Autoencoders'
+summary: 'A multi-scale BiLSTM seq2point model that estimates per-appliance consumption from a single aggregate meter, plus a convolutional autoencoder that flags appliances the model has never seen.'
+domain: 'Energy · Deep Learning'
+stack: ['BiLSTM', 'Convolutional autoencoder', 'NILMTK', 'UK-DALE', 'XGBoost']
+date: 2026-09-12
+order: 4
+featured: true
+# github: 'https://github.com/YOUR_USERNAME/nilm-bilstm'
+---
+
+## Problem and motivation
+
+Non-Intrusive Load Monitoring (NILM) recovers the consumption of individual appliances from one aggregate power signal, so no sensor is needed on each device. This project was carried out during an engineering internship at ACTIA Engineering Services, in collaboration with the Synergy Lab. Two questions drove the work: how accurately can a compact network disaggregate many appliances at once, and how can the system notice when a new, unknown appliance appears?
+
+## Technical approach
+
+- **Disaggregation model (v7).** `MultiScaleBiLSTMSeq2Point` maps a window of the aggregate signal to the power of one appliance at the window midpoint. It handles 18 appliances from 25 input features, with about 590K parameters.
+- **Novelty detection.** A convolutional denoising autoencoder (DAE) is trained on the known appliances. A high reconstruction error on the residual signal indicates an appliance the model does not know.
+- **Evaluation protocol.** Leave-One-Appliance-Out (LOAO): the microwave is held out as the unknown appliance.
+- **Baseline.** An XGBoost disaggregation pipeline was kept as a point of comparison.
+
+## Dataset and preprocessing
+
+The model is trained on UK-DALE, House 2, using the NILMTK HDF5 format.
+
+- Building metadata lives in separate YAML files, not in the HDF5 node attributes, so a dedicated parser reads it.
+- Extraction streams from the HDF5 file in chunks to avoid exhausting RAM.
+- Fine-tuning datasets for new houses carry a per-appliance `_valid` mask column, so appliances that are missing in a house do not contribute to the loss.
+
+## Experiments and results
+
+Novelty detection with the convolutional DAE (microwave held out):
+
+| Metric | Value |
+| --- | --- |
+| Validation loss | 0.183 |
+| Threshold (P95) | 1.121 |
+| AUC-ROC | 0.871 |
+| Recall at threshold | 4.5% |
+
+Residual-signal reconstruction: MAE 82.99 W, RMSE 113.19 W, Pearson correlation 0.596.
+
+The AUC-ROC of 0.871 shows that the reconstruction error separates the unknown appliance reasonably well. The recall of 4.5% at the P95 threshold shows that this operating point is very conservative, so most events of the unknown appliance are missed.
+
+## Challenges and lessons learned
+
+- Three appliances (cooker, server HDD, PlayStation) have an F1 of 0.000 across every model version. This comes from class imbalance (these appliances are almost always off in the training data), not from a failure of the architecture.
+- Choosing the novelty threshold from the validation distribution is simple but trades recall for a low false-alarm rate. A threshold chosen for the target use case would change the recall considerably.
+- Most of the engineering effort went into the data pipeline: memory-safe extraction and correct handling of metadata mattered more than model tweaks.
+
+## Repository and demo
+
+{/* TODO: add the GitHub link in the frontmatter (github: ...) and, if you have one, a demo link. */}

@@ -1,0 +1,41 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '../utils/formatDate';
+import { readingTime } from '../utils/readingTime';
+import TagBadge from './TagBadge.astro';
+
+interface Props {
+  entry: CollectionEntry<'writing'>;
+}
+const { entry } = Astro.props;
+const { title, summary, date, tags, draft } = entry.data;
+const minutes = readingTime(entry.body);
+---
+
+<article class="article-card border-t border-line py-6 first:border-t-0 first:pt-0" data-tags={tags.join('|').toLowerCase()}>
+  <p class="text-sm text-muted">
+    <time datetime={date.toISOString()}>{formatDate(date)}</time> · {minutes} min read
+  </p>
+  <h3 class="mt-1 font-serif text-[1.35rem] leading-snug">
+    <a href={`/writing/${entry.slug}/`} class="text-accent hover:underline underline-offset-4">
+      {title}
+    </a>
+    {
+      draft && (
+        <span class="ml-2 rounded bg-amber-100 px-2 py-0.5 align-middle font-sans text-xs text-amber-800">
+          Draft
+        </span>
+      )
+    }
+  </h3>
+  <p class="mt-2 text-[1.05rem] leading-relaxed text-ink/90">{summary}</p>
+  {
+    tags.length > 0 && (
+      <div class="mt-3 flex flex-wrap gap-2">
+        {tags.map((t) => (
+          <TagBadge label={t} />
+        ))}
+      </div>
+    )
+  }
+</article>

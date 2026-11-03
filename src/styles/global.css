@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-paper font-sans text-ink;
+  }
+  ::selection {
+    background: theme('colors.accentSoft');
+  }
+}
+
+@layer components {
+  .link {
+    @apply text-accent underline-offset-4 hover:underline;
+  }
+  .section-title {
+    @apply mb-5 font-serif text-[1.75rem] leading-tight text-ink;
+  }
+  .tag {
+    @apply inline-block rounded border border-line px-2 py-0.5 text-xs text-muted;
+  }
+}
+
+/* Code blocks inside articles */
+.prose pre {
+  @apply border border-line bg-sidebar text-ink;
+}
+.prose :where(table) {
+  @apply text-[0.95rem];
+}

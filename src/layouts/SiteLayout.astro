@@ -1,0 +1,62 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Sidebar from '../components/Sidebar.astro';
+import SearchBar from '../components/SearchBar.astro';
+import RecentlyUpdated from '../components/RecentlyUpdated.astro';
+import Footer from '../components/Footer.astro';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  title?: string;
+  description?: string;
+  crumbs?: Crumb[];
+  showRecent?: boolean;
+}
+const { title, description, crumbs = [{ label: 'Home' }], showRecent = true } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <Sidebar />
+  <div class="lg:pl-[325px]">
+    <div class="mx-auto max-w-[1180px] px-6 lg:px-10">
+      <div class="flex items-center justify-between gap-4 py-6">
+        <nav aria-label="Breadcrumb" class="min-w-0 truncate text-[0.95rem] text-muted">
+          {
+            crumbs.map((c, i) => (
+              <>
+                {i > 0 && <span class="mx-2 text-slate-300">/</span>}
+                {c.href ? (
+                  <a href={c.href} class="hover:text-accent">
+                    {c.label}
+                  </a>
+                ) : (
+                  <span>{c.label}</span>
+                )}
+              </>
+            ))
+          }
+        </nav>
+        <SearchBar />
+      </div>
+
+      <div class="flex gap-12">
+        <div class="min-w-0 flex-1">
+          <main class="max-w-[720px] pt-6">
+            <slot />
+          </main>
+          <Footer />
+        </div>
+        {
+          showRecent && (
+            <aside class="hidden w-[260px] shrink-0 pt-6 xl:block">
+              <RecentlyUpdated />
+            </aside>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,39 @@
+---
+import type { GetStaticPaths } from 'astro';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { getProjects } from '../../utils/content';
+import { readingTime } from '../../utils/readingTime';
+
+export const getStaticPaths = (async () => {
+  const projects = await getProjects();
+  return projects.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const d = entry.data;
+
+const links = [
+  ...(d.github ? [{ label: 'GitHub', href: d.github }] : []),
+  ...(d.demo ? [{ label: 'Demo', href: d.demo }] : []),
+];
+---
+
+<ArticleLayout
+  title={d.title}
+  description={d.summary}
+  date={d.date}
+  updated={d.updated}
+  minutes={readingTime(entry.body)}
+  tags={d.stack}
+  domain={d.domain}
+  links={links}
+  draft={d.draft}
+  crumbs={[
+    { label: 'Home', href: '/' },
+    { label: 'Projects', href: '/projects/' },
+    { label: d.title },
+  ]}
+>
+  <Content />
+</ArticleLayout>

@@ -1,0 +1,43 @@
+---
+import { getProjects, getWriting, lastTouched } from '../utils/content';
+
+const [projects, writing] = await Promise.all([getProjects(), getWriting()]);
+
+const items = [
+  ...projects.map((p) => ({
+    title: p.data.title,
+    href: `/projects/${p.slug}/`,
+    when: lastTouched(p.data),
+  })),
+  ...writing.map((w) => ({
+    title: w.data.title,
+    href: `/writing/${w.slug}/`,
+    when: lastTouched(w.data),
+  })),
+]
+  .sort((a, b) => b.when.valueOf() - a.when.valueOf())
+  .slice(0, 5);
+---
+
+{
+  items.length > 0 && (
+    <section class="border-l border-line pl-5" aria-labelledby="recent-title">
+      <h2 id="recent-title" class="mb-4 font-sans text-base font-semibold text-muted">
+        Recently Updated
+      </h2>
+      <ul class="space-y-3">
+        {items.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              title={item.title}
+              class="block truncate text-[0.95rem] text-muted transition hover:text-accent"
+            >
+              {item.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

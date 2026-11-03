@@ -1,0 +1,31 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import TagBadge from '../components/TagBadge.astro';
+import { experience } from '../data/experience';
+---
+
+<SiteLayout
+  title="Experience"
+  description="Internships, engineering projects and academic background."
+  crumbs={[{ label: 'Home', href: '/' }, { label: 'Experience' }]}
+>
+  <h1 class="section-title !text-[2rem]">Experience</h1>
+  <div class="mt-8">
+    {
+      experience.map((e) => (
+        <section class="border-t border-line py-7 first:border-t-0 first:pt-0">
+          <h2 class="font-serif text-[1.35rem] leading-snug">{e.organization}</h2>
+          <p class="mt-1 text-[1.05rem] font-semibold">{e.role}</p>
+          {e.period && <p class="text-sm text-muted">{e.period}</p>}
+          <p class="mt-3 text-[1.05rem] leading-relaxed">{e.summary}</p>
+          <ul class="mt-3 list-disc space-y-1.5 pl-5 text-[1.02rem] marker:text-slate-400">
+            {e.highlights.map((h) => <li>{h}</li>)}
+          </ul>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {e.stack.map((s) => <TagBadge label={s} />)}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</SiteLayout>

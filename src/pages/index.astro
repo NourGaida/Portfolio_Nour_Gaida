@@ -1,0 +1,65 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { site } from '../data/site';
+import { getProjects, getWriting } from '../utils/content';
+import { formatDate } from '../utils/formatDate';
+
+const projects = (await getProjects()).filter((p) => p.data.featured);
+const writing = (await getWriting()).slice(0, 3);
+const links = site.social.filter((s) => s.label !== 'RSS');
+---
+
+<SiteLayout crumbs={[{ label: 'Home' }]}>
+  <section>
+    <h1 class="section-title !text-[2rem]">About Me</h1>
+    <p class="text-[1.35rem] leading-snug">{site.tagline}</p>
+    <p class="mt-4 text-lg text-muted">{site.role}</p>
+    <p class="mt-5 flex flex-wrap gap-6 text-[1.05rem]">
+      {
+        links.map((l) => (
+          <a
+            href={l.href}
+            class="link"
+            target={l.href.startsWith('http') ? '_blank' : undefined}
+            rel={l.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
+            {l.label} ↗
+          </a>
+        ))
+      }
+    </p>
+    <p class="mt-6 text-[1.15rem] leading-relaxed">{site.about}</p>
+  </section>
+
+  {
+    projects.length > 0 && (
+      <section class="mt-14">
+        <h2 class="section-title">Selected Projects</h2>
+        {projects.map((p) => <ProjectCard entry={p} />)}
+        <p class="mt-4 text-[0.95rem]">
+          <a href="/projects/" class="link">All projects →</a>
+        </p>
+      </section>
+    )
+  }
+
+  {
+    writing.length > 0 && (
+      <section class="mt-14">
+        <h2 class="section-title">Selected Writing</h2>
+        <ul class="list-disc space-y-3 pl-5 marker:text-slate-400">
+          {writing.map((w) => (
+            <li class="text-[1.05rem]">
+              <a href={`/writing/${w.slug}/`} class="link">{w.data.title}</a>
+              <span class="ml-2 text-sm italic text-muted">{formatDate(w.data.date)}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-4 text-[0.95rem]">
+          <a href="/writing/" class="link">All writing →</a>
+        </p>
+      </section>
+    )
+  }
+</SiteLayout>

@@ -1,0 +1,33 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { site } from '../data/site';
+---
+
+<SiteLayout
+  title="About"
+  description="Education, interests and contact."
+  crumbs={[{ label: 'Home', href: '/' }, { label: 'About' }]}
+>
+  <h1 class="section-title !text-[2rem]">About</h1>
+  <p class="text-[1.15rem] leading-relaxed">{site.about}</p>
+
+  <h2 class="section-title mt-12">Education</h2>
+  <p class="text-[1.05rem] leading-relaxed">
+    <strong>SUP'COM</strong> — École Supérieure des Communications de Tunis. ICT / Telecommunications Engineering.
+  </p>
+
+  <h2 class="section-title mt-12">Interests</h2>
+  <ul class="list-disc space-y-1.5 pl-5 text-[1.05rem] marker:text-slate-400">
+    <li>Medical imaging and neuroscience</li>
+    <li>Biomedical signals and non-intrusive monitoring</li>
+    <li>Efficient deep learning on embedded devices (TinyML)</li>
+    <li>Applying LLMs to security analysis</li>
+  </ul>
+
+  <h2 class="section-title mt-12">Contact</h2>
+  <p class="text-[1.05rem] leading-relaxed">
+    The easiest way to reach me is by <a class="link" href={`mailto:${site.email}`}>email</a>, or on
+    <a class="link" href={site.social[1].href} target="_blank" rel="noopener noreferrer">LinkedIn</a> and
+    <a class="link" href={site.social[0].href} target="_blank" rel="noopener noreferrer">GitHub</a>.
+  </p>
+</SiteLayout>

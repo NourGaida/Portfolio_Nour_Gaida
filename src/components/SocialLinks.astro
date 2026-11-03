@@ -1,0 +1,23 @@
+---
+import Icon from './Icon.astro';
+import { site } from '../data/site';
+---
+
+<ul class="flex flex-wrap gap-3">
+  {
+    site.social.map((s) => (
+      <li>
+        <a
+          href={s.href}
+          aria-label={s.label}
+          title={s.label}
+          class="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-slate-600 transition hover:bg-accentSoft hover:text-accent"
+          target={s.href.startsWith('http') ? '_blank' : undefined}
+          rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
+          <Icon name={s.icon} size={18} />
+        </a>
+      </li>
+    ))
+  }
+</ul>

@@ -1,0 +1,51 @@
+---
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+import SocialLinks from './SocialLinks.astro';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<aside
+  class="border-b border-line bg-sidebar px-6 py-6 lg:fixed lg:inset-y-0 lg:left-0 lg:z-20 lg:flex lg:w-[325px] lg:flex-col lg:overflow-y-auto lg:border-b-0 lg:px-[30px] lg:py-14"
+>
+  <div class="flex items-center gap-4 lg:flex-col lg:gap-0">
+    <a href="/" class="block shrink-0">
+      <img
+        src={site.avatar}
+        alt={site.name}
+        width="200"
+        height="200"
+        class="h-16 w-16 rounded-full object-cover lg:h-[200px] lg:w-[200px]"
+      />
+    </a>
+    <a href="/" class="font-serif text-xl font-bold text-slate-600 lg:mt-6 lg:text-[2rem]">
+      {site.name}
+    </a>
+  </div>
+
+  <nav class="mt-5 flex flex-wrap gap-1 lg:mt-14 lg:flex-col lg:gap-2" aria-label="Main">
+    {
+      site.nav.map((item) => (
+        <a
+          href={item.href}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+          class:list={[
+            'flex items-center gap-3 rounded-xl px-4 py-2.5 text-[0.8rem] font-semibold uppercase tracking-wider transition lg:gap-4 lg:px-5 lg:py-3',
+            isActive(item.href)
+              ? 'bg-accentSoft text-ink'
+              : 'text-slate-600 hover:bg-slate-200/60',
+          ]}
+        >
+          <Icon name={item.icon} size={18} class="shrink-0 text-slate-500" />
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="mt-5 lg:mt-auto lg:pt-10">
+    <SocialLinks />
+  </div>
+</aside>

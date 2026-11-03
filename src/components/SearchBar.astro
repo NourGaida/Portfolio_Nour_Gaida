@@ -1,0 +1,99 @@
+---
+import Icon from './Icon.astro';
+---
+
+<div class="relative w-full max-w-[250px]" id="search-root">
+  <label class="relative block">
+    <span class="sr-only">Search</span>
+    <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+      <Icon name="search" size={16} />
+    </span>
+    <input
+      id="search-input"
+      type="search"
+      autocomplete="off"
+      placeholder="Search..."
+      class="w-full rounded-full border border-line bg-white py-2 pl-9 pr-4 text-sm text-ink placeholder:text-slate-400 focus:border-accent focus:outline-none"
+    />
+  </label>
+  <ul
+    id="search-results"
+    class="absolute right-0 z-30 mt-2 hidden max-h-[70vh] w-[min(340px,90vw)] overflow-y-auto rounded-lg border border-line bg-white p-2 shadow-lg"
+  >
+  </ul>
+</div>
+
+<script>
+  type Item = { title: string; summary: string; url: string; type: string; tags: string[] };
+
+  const input = document.getElementById('search-input') as HTMLInputElement | null;
+  const list = document.getElementById('search-results') as HTMLUListElement | null;
+  const root = document.getElementById('search-root');
+  let index: Item[] | null = null;
+
+  async function load(): Promise<Item[]> {
+    if (index) return index;
+    try {
+      const res = await fetch('/search.json');
+      index = (await res.json()) as Item[];
+    } catch {
+      index = [];
+    }
+    return index;
+  }
+
+  function render(items: Item[], query: string) {
+    if (!list) return;
+    list.textContent = '';
+    if (!query) {
+      list.classList.add('hidden');
+      return;
+    }
+    if (items.length === 0) {
+      const li = document.createElement('li');
+      li.className = 'px-3 py-2 text-sm text-slate-500';
+      li.textContent = 'No results.';
+      list.appendChild(li);
+    }
+    for (const item of items.slice(0, 6)) {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = item.url;
+      a.className = 'block rounded px-3 py-2 hover:bg-slate-100';
+      const kind = document.createElement('span');
+      kind.className = 'mr-2 text-[0.65rem] font-semibold uppercase tracking-wider text-slate-400';
+      kind.textContent = item.type;
+      const title = document.createElement('span');
+      title.className = 'text-sm font-semibold text-ink';
+      title.textContent = item.title;
+      const summary = document.createElement('p');
+      summary.className = 'mt-0.5 line-clamp-2 text-xs text-slate-500';
+      summary.textContent = item.summary;
+      a.append(kind, title, summary);
+      li.appendChild(a);
+      list.appendChild(li);
+    }
+    list.classList.remove('hidden');
+  }
+
+  input?.addEventListener('focus', () => void load());
+  input?.addEventListener('input', async () => {
+    const q = input.value.trim().toLowerCase();
+    const data = await load();
+    const hits = q
+      ? data.filter((d) =>
+          [d.title, d.summary, d.tags.join(' ')].join(' ').toLowerCase().includes(q),
+        )
+      : [];
+    render(hits, q);
+  });
+  document.addEventListener('click', (e) => {
+    if (root && !root.contains(e.target as Node)) list?.classList.add('hidden');
+  });
+  input?.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      list?.classList.add('hidden');
+      input.blur();
+    }
+  });
+</script>

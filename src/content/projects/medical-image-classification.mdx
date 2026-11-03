@@ -1,0 +1,38 @@
+---
+title: 'Chest X-ray Classification with Explainability'
+summary: 'Multi-label classification of chest X-ray pathologies on PadChest224, comparing DenseNet121, ResNet50 and EfficientNet-B4, with Grad-CAM and SHAP to explain the predictions.'
+domain: 'Medical Imaging · Deep Learning'
+stack: ['DenseNet121', 'ResNet50', 'EfficientNet-B4', 'Grad-CAM', 'SHAP', 'Kaggle', 'Colab']
+date: 2026-09-12
+order: 2
+featured: true
+# github: 'https://github.com/YOUR_USERNAME/chest-xray-classification'
+---
+
+## Problem and motivation
+
+A single chest X-ray can show several findings at once, so the task is multi-label: each image can carry zero, one or many pathologies. In a medical setting a prediction is also not enough, a clinician needs to see where the model is looking. This project compares three architectures and adds explainability to every prediction.
+
+## Technical approach
+
+- **Backbones.** DenseNet121, ResNet50 and EfficientNet-B4, trained for multi-label output.
+- **Explainability.** Grad-CAM heatmaps show which image regions drive each prediction. SHAP gives a complementary, attribution-based view.
+- **Environment.** Training and experiments run on Kaggle and Google Colab.
+
+## Dataset and preprocessing
+
+The dataset is PadChest224, a 224-pixel version of PadChest.
+
+{/* TODO: add the number of images, the labels you kept, the train/validation/test split, and the augmentations you used. */}
+
+## Experiments and results
+
+{/* TODO: add a table with AUC (macro and per class) for the three backbones, and two or three Grad-CAM examples saved in public/images/projects/. This section is the core of the case study. */}
+
+## Challenges and lessons learned
+
+{/* TODO: for example label imbalance, noisy labels, and what the Grad-CAM maps revealed about shortcuts. */}
+
+## Repository and demo
+
+{/* TODO: add the GitHub link in the frontmatter. */}

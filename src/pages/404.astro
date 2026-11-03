@@ -1,0 +1,8 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+---
+
+<SiteLayout title="Page not found" crumbs={[{ label: 'Home', href: '/' }, { label: '404' }]} showRecent={false}>
+  <h1 class="section-title !text-[2rem]">Page not found</h1>
+  <p class="text-lg text-muted">This page doesn't exist. <a href="/" class="link">Back to the home page</a>.</p>
+</SiteLayout>

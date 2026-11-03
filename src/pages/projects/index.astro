@@ -1,0 +1,19 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { getProjects } from '../../utils/content';
+
+const projects = await getProjects();
+---
+
+<SiteLayout
+  title="Projects"
+  description="Technical case studies in medical imaging, embedded AI, energy and security."
+  crumbs={[{ label: 'Home', href: '/' }, { label: 'Projects' }]}
+>
+  <h1 class="section-title !text-[2rem]">Projects</h1>
+  <p class="mb-8 text-lg text-muted">
+    Each project is a case study: problem, approach, data, results and lessons learned.
+  </p>
+  {projects.map((p) => <ProjectCard entry={p} />)}
+</SiteLayout>
