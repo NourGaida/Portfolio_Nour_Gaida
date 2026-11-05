@@ -1,25 +1,104 @@
 ---
-title: 'SmartCare: IoT Monitoring for Healthcare'
-summary: 'An IoT system using MQTT for intelligent healthcare monitoring.'
-domain: 'IoT · Healthcare'
-stack: ['IoT', 'MQTT']
-date: 2026-09-12
+title: 'SmartCare: IoT-Based Patient Monitoring and Early-Warning Platform'
+summary: 'An IoT healthcare monitoring platform integrating ESP32 sensors, MQTT communication, real-time data processing, a Jakarta EE backend, and asynchronous anomaly detection.'
+domain: 'IoT · Healthcare · Backend Engineering'
+stack:
+  - ESP32
+  - MAX30102
+  - MQTT
+  - Node-RED
+  - Java
+  - Jakarta EE
+  - WildFly
+  - MongoDB
+  - Python
+  - Progressive Web Apps
+date: 2026-11-02
 order: 6
 featured: false
-draft: true
-# github: 'https://github.com/YOUR_USERNAME/smartcare'
+draft: false
+github: 'https://github.com/NourGaida/SmartCare'
 ---
 
-{/* This page is a draft and is hidden in production builds. Remove `draft: true` once it is written. */}
+## Overview
 
-## Problem and motivation
+SmartCare is an IoT-based patient monitoring and early-warning platform developed as an academic project at SUP'COM. It connects wearable-style sensor acquisition, real-time messaging, backend processing, and anomaly analysis to provide a centralized monitoring environment.
 
-## Technical approach
+An ESP32 equipped with a MAX30102 sensor acquires physiological measurements and transmits them through MQTT. A Node-RED gateway validates and normalizes incoming messages before forwarding them to the backend. The backend manages users, devices, measurements, business rules, and alerts, while a separate Python service performs asynchronous anomaly scoring.
 
-## Dataset and preprocessing
+The platform provides two Progressive Web Applications (PWAs): a front-office interface for monitored individuals and a back-office interface for monitoring professionals and administrators.
 
-## Experiments and results
+## System Architecture
 
-## Challenges and lessons learned
+The platform follows a modular, event-driven architecture:
 
-## Repository and demo
+1. **IoT Acquisition:** An ESP32 reads physiological measurements from the MAX30102 sensor.
+2. **Messaging Layer:** MQTT transports raw sensor messages between the device, gateway, and backend.
+3. **Data Gateway:** Node-RED validates, normalizes, and routes incoming measurements.
+4. **Backend Services:** A Jakarta EE application deployed on WildFly handles persistence, business rules, access control, and alert generation.
+5. **Database:** MongoDB stores users, devices, measurements, anomaly scores, alerts, and configuration.
+6. **Anomaly Detection:** An independent Python service computes anomaly scores asynchronously.
+7. **User Interfaces:** Two PWAs provide monitoring and administration capabilities.
+
+## Key Features
+
+- **Physiological Data Acquisition:** Collect sensor measurements using ESP32 and MAX30102.
+- **MQTT-Based Communication:** Exchange measurement data through a message broker.
+- **Data Validation and Normalization:** Use Node-RED as an ingestion gateway to validate incoming messages and standardize payloads.
+- **Centralized Backend:** Manage users, devices, measurements, configurations, and access permissions through a REST API.
+- **Automated Alerts:** Apply backend business rules to detect conditions requiring attention.
+- **Asynchronous Anomaly Analysis:** Compute anomaly scores through a separate Python service without blocking measurement ingestion or storage.
+- **Role-Based Interfaces:** Provide separate front-office and back-office experiences for monitored individuals, professionals, and administrators.
+
+## Technical Implementation
+
+### Backend and Data Management
+
+Developed a Maven-based Jakarta EE application exposing REST endpoints through JAX-RS. Deployed on WildFly, the backend centralizes business logic, persistence, authorization, and communication with the anomaly analysis service.
+
+MongoDB is used to organize platform data, including measurements, devices, users, alerts, and anomaly scores.
+
+### IoT and Messaging
+
+The ESP32 acquires physiological measurements through the MAX30102 sensor and publishes them using MQTT.
+
+Node-RED acts as a dedicated gateway, validating message structures, checking data quality, normalizing formats, and forwarding valid messages to the backend.
+
+### Anomaly Analysis
+
+A separate Python service processes stored physiological measurements and computes anomaly scores asynchronously. The backend remains responsible for storing the resulting scores and exposing them to the applications.
+
+This separation ensures that measurement ingestion and normal platform operations do not depend on the availability of the anomaly analysis service.
+
+### Frontend Applications
+
+The platform includes two Progressive Web Applications:
+
+- **Front Office:** Personal measurements, historical data, alerts, status, and device information.
+- **Back Office:** Monitoring dashboards for professionals and administrators, including users, measurements, anomaly scores, alerts, and device status.
+
+## Engineering Principles
+
+- Separation of concerns between data acquisition, messaging, backend processing, and anomaly analysis.
+- Centralized business logic and access control in the backend.
+- Asynchronous anomaly processing to avoid blocking real-time measurement workflows.
+- Data validation at both gateway and backend levels.
+- Environment-based configuration to keep credentials and secrets outside the source code.
+
+## Technology Stack
+
+**Embedded & IoT:** ESP32, MAX30102, MQTT
+
+**Data Processing:** Node-RED, Python
+
+**Backend:** Java 25, Jakarta EE 11, JAX-RS, WildFly 42, Maven
+
+**Database:** MongoDB
+
+**Frontend:** Progressive Web Applications
+
+## Repository
+
+[View the source code on GitHub](https://github.com/NourGaida/SmartCare)
+
+**Note:** SmartCare is an educational prototype. Its physiological measurements and anomaly scores are experimental estimates and are not intended for clinical diagnosis.

@@ -5,7 +5,13 @@ import { site } from '../data/site';
 import { getProjects, getWriting } from '../utils/content';
 import { formatDate } from '../utils/formatDate';
 
-const projects = (await getProjects()).filter((p) => p.data.featured);
+const projects = (await getProjects())
+  .filter((p) => p.data.featured)
+  .sort((a, b) => {
+    if (a.slug === 'medical-image-classification') return -1;
+    if (b.slug === 'medical-image-classification') return 1;
+    return 0;
+  });
 const writing = (await getWriting()).slice(0, 3);
 const links = site.social.filter((s) => s.label !== 'RSS');
 ---
