@@ -30,7 +30,6 @@ export const site = {
     { label: 'Projects', href: '/projects/', icon: 'folder' },
     { label: 'Writing', href: '/writing/', icon: 'pen' },
     { label: 'Experience', href: '/experience/', icon: 'briefcase' },
-    { label: 'Publications', href: '/publications/', icon: 'book' },
     { label: 'About', href: '/about/', icon: 'user' },
   ],
 
