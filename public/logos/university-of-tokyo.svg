@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 140" role="img" aria-label="THE UNIVERSITY OF TOKYO">
-  <rect x="2" y="2" width="416" height="136" rx="18" fill="#F7ECEE" stroke="#8B1E2D" stroke-opacity=".18" stroke-width="4"/>
-  <circle cx="76" cy="70" r="48" fill="#8B1E2D"/>
-  <text x="76" y="82" text-anchor="middle" font-family="Arial, sans-serif" font-size="46" font-weight="700" fill="#FFFFFF">東大</text>
-  <text x="145" y="66" font-family="Arial, sans-serif" font-size="25" font-weight="700" letter-spacing=".5" fill="#8B1E2D">THE UNIVERSITY OF TOKYO</text>
-  <text x="145" y="94" font-family="Arial, sans-serif" font-size="13" letter-spacing="2" fill="#8B1E2D" opacity=".72">ORGANIZATION</text>
-</svg>

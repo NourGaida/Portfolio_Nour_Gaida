@@ -28,7 +28,6 @@ export const site = {
   nav: [
     { label: 'Home', href: '/', icon: 'home' },
     { label: 'Projects', href: '/projects/', icon: 'folder' },
-    { label: 'Writing', href: '/writing/', icon: 'pen' },
     { label: 'Experience', href: '/experience/', icon: 'briefcase' },
     { label: 'About', href: '/about/', icon: 'user' },
   ],
