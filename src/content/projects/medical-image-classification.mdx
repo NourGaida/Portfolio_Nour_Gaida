@@ -1,38 +1,164 @@
 ---
-title: 'Chest X-ray Classification with Explainability'
-summary: 'Multi-label classification of chest X-ray pathologies on PadChest224, comparing DenseNet121, ResNet50 and EfficientNet-B4, with Grad-CAM and SHAP to explain the predictions.'
-domain: 'Medical Imaging · Deep Learning'
-stack: ['DenseNet121', 'ResNet50', 'EfficientNet-B4', 'Grad-CAM', 'SHAP', 'Kaggle', 'Colab']
-date: 2026-09-12
-order: 2
-featured: true
-# github: 'https://github.com/YOUR_USERNAME/chest-xray-classification'
+title: "Explainable Chest X-ray Classification"
+description: "A comparative study of DenseNet121, ResNet50 and EfficientNet-B4 for detecting 14 pulmonary findings from chest radiographs, with Grad-CAM and EigenCAM."
+date: "2026-09-12"
+tags:
+  - Medical Imaging
+  - Deep Learning
+  - Computer Vision
+  - PyTorch
+  - Grad-CAM
+  - EigenCAM
+  - Healthcare AI
 ---
 
-## Problem and motivation
+**Medical Imaging · Deep Learning · Explainable AI**
 
-A single chest X-ray can show several findings at once, so the task is multi-label: each image can carry zero, one or many pathologies. In a medical setting a prediction is also not enough, a clinician needs to see where the model is looking. This project compares three architectures and adds explainability to every prediction.
+# Explainable Chest X-ray Classification
 
-## Technical approach
+A comparative deep learning system for detecting 14 pulmonary findings from chest X-rays using PadChest. The project combines transfer learning, class-imbalance handling, model evaluation and explainability, with a web application called ChestVision for interactive inference.
 
-- **Backbones.** DenseNet121, ResNet50 and EfficientNet-B4, trained for multi-label output.
-- **Explainability.** Grad-CAM heatmaps show which image regions drive each prediction. SHAP gives a complementary, attribution-based view.
-- **Environment.** Training and experiments run on Kaggle and Google Colab.
+![Chest X-ray classification project](/images/projects/chest-xray/hero.png)
 
-## Dataset and preprocessing
+## Overview
 
-The dataset is PadChest224, a 224-pixel version of PadChest.
+Chest X-ray interpretation is an important part of pulmonary diagnosis, but analyzing large volumes of radiographs requires time and specialized expertise.
 
-{/* TODO: add the number of images, the labels you kept, the train/validation/test split, and the augmentations you used. */}
+This project explores how deep learning can support radiological analysis by automatically identifying pulmonary abnormalities. Three pretrained CNN architectures were implemented and compared, with explainability methods used to investigate the visual regions influencing model predictions.
 
-## Experiments and results
+## Dataset and exploration
 
-{/* TODO: add a table with AUC (macro and per class) for the three backbones, and two or three Grad-CAM examples saved in public/images/projects/. This section is the core of the case study. */}
+The experiments use PadChest224, a collection of chest radiographs with 174 original radiological findings. We selected 14 target categories, including normal examinations, cardiomegaly, pleural effusion, pneumothorax and pulmonary fibrosis.
+
+The dataset exploration included:
+- Label frequency and class imbalance analysis.
+- Pathology co-occurrence analysis.
+- Patient demographic exploration.
+- Image quality checks and preprocessing.
+- Patient-level train/validation/test splitting.
+
+![Distribution of the 14 target pathologies](/images/projects/chest-xray/class-distribution.png)
+
+![Pathology co-occurrence matrix](/images/projects/chest-xray/cooccurrence.png)
+
+## Methodology
+
+### Image preprocessing
+
+- Grayscale conversion and pixel normalization.
+- CLAHE contrast enhancement.
+- Image resizing to 224 × 224.
+- Training-time augmentation using rotations, translations and horizontal flips.
+
+![Original image and CLAHE preprocessing](/images/projects/chest-xray/clahe.png)
+
+### Model architectures
+
+Three ImageNet-pretrained convolutional neural networks were compared:
+
+- **DenseNet121:** dense connectivity and feature reuse.
+- **ResNet50:** residual connections for deep feature extraction.
+- **EfficientNet-B4:** balanced network scaling.
+
+The models combine image features with patient metadata, including age, sex, projection and acquisition year.
+
+![CNN architecture comparison](/images/projects/chest-xray/architectures.png)
+
+### Training and optimization
+
+The training pipeline incorporated:
+- Focal Loss with class weighting.
+- Progressive backbone fine-tuning.
+- Warmup and cosine learning-rate scheduling.
+- Dropout and Mixup regularization.
+- Automatic Mixed Precision.
+- Early stopping and validation-based checkpoint selection.
+- Test-Time Augmentation and optimized classification thresholds.
+
+Training was performed on Kaggle GPUs.
+
+## Experimental results
+
+### Overall model comparison
+
+The following results were obtained on the test set.
+
+| Metric | DenseNet121 | ResNet50 | EfficientNet-B4 |
+|---|---:|---:|---:|
+| Macro AUC | **0.8601** | 0.7712 | 0.8576 |
+| mAP | 0.3601 | 0.2213 | **0.3632** |
+| Macro F1 | 0.3276 | 0.2174 | **0.3518** |
+| Micro F1 | 0.6038 | 0.4407 | **0.6284** |
+| Latency | **11.8 ms** | 15.6 ms | 24.9 ms |
+
+![Model performance comparison](/images/projects/chest-xray/model-comparison.png)
+
+DenseNet121 achieved the highest macro AUC and the lowest inference latency, offering a favorable balance between performance and computational cost. EfficientNet-B4 obtained the highest mAP and F1 scores, while ResNet50 showed comparatively weaker performance.
+
+### Training behavior
+
+![Validation AUC curves](/images/projects/chest-xray/training-curves.png)
+
+DenseNet121 showed stable convergence, reaching a validation AUC of 0.8601 at epoch 49. EfficientNet-B4 converged earlier, while ResNet50 reached a plateau around 0.771.
+
+### Per-class evaluation
+
+Beyond global metrics, the models were evaluated using:
+- ROC curves and AUC per pathology.
+- Precision-recall curves.
+- Sensitivity and specificity.
+- Per-class confusion matrices.
+
+![ROC and precision recall curves](/images/projects/chest-xray/roc-pr.png)
+
+![Per-class confusion matrices](/images/projects/chest-xray/confusion-matrices.png)
+
+The analysis highlighted the difficulty of detecting rare findings, particularly pneumothorax and mediastinal mass, due to class imbalance.
+
+## Explainable AI
+
+A central part of this project was investigating whether model predictions were associated with medically relevant image regions.
+
+Two complementary methods were applied to DenseNet121:
+
+**Grad-CAM**
+
+Gradient-weighted Class Activation Mapping highlights image regions that contribute to a selected prediction.
+
+**EigenCAM**
+
+EigenCAM provides a complementary activation-based visualization without requiring class gradients.
+
+![Grad-CAM and EigenCAM comparison](/images/projects/chest-xray/gradcam-eigencam.png)
+
+Aggregated heatmaps were also generated to investigate the regions that the model consistently focused on across multiple test images.
+
+## ChestVision — Interactive demonstration
+
+To demonstrate the practical application of the trained model, we developed ChestVision, a web interface allowing users to upload a chest radiograph and provide basic patient metadata.
+
+The application displays:
+- The predicted primary finding.
+- Confidence scores for the 14 target categories.
+- A visual summary of model predictions.
+
+![ChestVision upload interface](/images/projects/chest-xray/chestvision-upload.png)
+
+![ChestVision prediction results](/images/projects/chest-xray/chestvision-results.png)
 
 ## Challenges and lessons learned
 
-{/* TODO: for example label imbalance, noisy labels, and what the Grad-CAM maps revealed about shortcuts. */}
+- **Class imbalance:** rare pathologies required dedicated weighting and loss strategies.
+- **Medical image preprocessing:** contrast enhancement and augmentation needed to preserve relevant anatomical information.
+- **Model selection:** the best architecture depended on the evaluation metric and inference cost.
+- **Explainability:** activation maps helped investigate model behavior, but visual explanations alone do not establish clinical validity.
 
-## Repository and demo
+## Technologies
 
-{/* TODO: add the GitHub link in the frontmatter. */}
+Python · PyTorch · Torchvision · Scikit-learn · NumPy · Pandas · Matplotlib · Grad-CAM · EigenCAM · Kaggle · Streamlit
+
+## Repository
+
+[GitHub — Pathologie Classification](https://github.com/NourGaida/pathologie_classification)
+
+**Research and educational project. Not intended for standalone clinical diagnosis.**
