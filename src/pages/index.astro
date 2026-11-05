@@ -1,3 +1,4 @@
+
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
@@ -6,21 +7,107 @@ import { getProjects, getWriting } from '../utils/content';
 import { formatDate } from '../utils/formatDate';
 
 const projects = (await getProjects())
-  .filter((p) => p.data.featured)
-  .sort((a, b) => {
-    if (a.slug === 'medical-image-classification') return -1;
-    if (b.slug === 'medical-image-classification') return 1;
-    return 0;
-  });
+  .filter((p) => p.slug === 'medical-image-classification')
+  .slice(0, 1);
+
 const writing = (await getWriting()).slice(0, 3);
 const links = site.social.filter((s) => s.label !== 'RSS');
+
+// Community activities
+const communityActivities = [
+  
+   {
+    title: "Sup'Robots Events",
+    category: 'Robotics & Student Life',
+    description:
+      'Served as Community Manager for the first edition of Sup’Robots, contributing to the event’s communication strategy, audience engagement, and overall success. I was responsible for building audience interest, promoting activities, and helping attract participants to the event. I also represented Sup’Robots in an English-language interview on Radio Tunis Chaîne Internationale (RTCI), where I spoke about the first edition and its objectives.',
+    images: [
+      '/images/community/suprobots-1.jpg',
+      '/images/community/suprobots-2.jpeg',
+      '/images/community/suprobots-3.png',
+    ],
+  },
+    {
+    title: '19th Challenge Projets d’Entreprendre – SUP’COM',
+    category: 'Entrepreneurship & Innovation',
+    description:
+    'Achieved a Top 8 position out of 27 participating teams in the 19th edition of SUP’COM’s Challenge Projets d’Entreprendre with SpeakApp, an AI-powered mobile solution designed to support children with speech disorders. Throughout the challenge, I collaborated with my team to develop the concept, structure its business model, and prepare our project pitch. We also had the opportunity to exchange with speech therapists, whose expertise helped us better understand users needs and refine our solution.',
+    images: [
+      '/images/community/challenge-1.png',
+      '/images/community/challenge-2.png',
+      '/images/community/challenge-3.png',
+    ],
+  },
+  {
+    title: 'Trisomy 21 Awareness Campaign',
+    category: 'Social Impact & Volunteering',
+    description:
+      'Took part in an awareness campaign supporting children with Trisomy 21, contributing to activities centered on inclusion, interaction, and creating positive moments for the children.',
+    images: [
+      '/images/community/trisomy-1.png',
+      '/images/community/trisomy-2.jpeg',
+      '/images/community/trisomy-3.jpg',
+    ],
+  },
+  {
+    title: 'IEEE Robotics and Automation Society',
+    category: 'Technical Community',
+    description:
+      'Contributed to the student robotics community and took part in workshops and activities exploring robotics, automation, and emerging technologies. And i was the ambassador of IEEE Tunisian RAS Student and Young Professional Congress for 2025.',
+
+    images: [
+      '/images/community/ras-1.JPG',
+      '/images/community/ras-2.jpg',
+      '/images/community/ras-3.png',
+    ],
+  },
+ 
+  {
+    title: 'IEEE Women in Engineering',
+    category: 'Women Empowerment',
+    description:
+      'Participated in IEEE Women in Engineering initiatives promoting women’s participation, visibility, and opportunities in engineering and technology.',
+    images: [
+      '/images/community/wie-1.JPG',
+      '/images/community/wie-2.JPG',
+      '/images/community/wie-3.JPG',
+    ],
+  },
+  {
+    title: 'IndabaX Tunisia',
+    category: 'AI Community',
+    description:
+      'Engaged with Tunisia’s artificial intelligence community through IndabaX, connecting with people interested in AI research, innovation, and knowledge sharing.',
+    images: [
+      '/images/community/indabax-1.JPG',
+      '/images/community/indabax-2.JPG',
+      '/images/community/indabax-3.png',
+    ],
+  },
+
+  {
+    title: 'Debate & Community Volunteering',
+    category: 'Public Speaking & Civic Engagement',
+    description:
+      'Through the Law Ken Ta3ref debate experience, I developed my public speaking, critical thinking, and argumentation skills. Alongside my team, we won both the local and national debate competitions, standing out through our creative ideas, strong arguments, and ability to defend our perspectives. This experience strengthened my confidence, teamwork, and communication skills.',
+    images: [
+      '/images/community/debate-volunteering.png',
+      '/images/community/22.png',
+      '/images/community/13.png',
+      ],
+  },
+];
 ---
 
 <SiteLayout crumbs={[{ label: 'Home' }]}>
+  <!-- About Me -->
   <section>
     <h1 class="section-title !text-[2rem]">About Me</h1>
+
     <p class="text-[1.35rem] leading-snug">{site.tagline}</p>
+
     <p class="mt-4 text-lg text-muted">{site.role}</p>
+
     <p class="mt-5 flex flex-wrap gap-6 text-[1.05rem]">
       {
         links.map((l) => (
@@ -35,14 +122,18 @@ const links = site.social.filter((s) => s.label !== 'RSS');
         ))
       }
     </p>
+
     <p class="mt-6 text-[1.15rem] leading-relaxed">{site.about}</p>
   </section>
 
+  <!-- Selected Projects -->
   {
     projects.length > 0 && (
       <section class="mt-14">
         <h2 class="section-title">Selected Projects</h2>
+
         {projects.map((p) => <ProjectCard entry={p} />)}
+
         <p class="mt-4 text-[0.95rem]">
           <a href="/projects/" class="link">All projects →</a>
         </p>
@@ -50,18 +141,71 @@ const links = site.social.filter((s) => s.label !== 'RSS');
     )
   }
 
+  <!-- Community -->
+  <section class="mt-16">
+    <h2 class="section-title">Community, Leadership & Social Impact</h2>
+
+    <p class="mt-4 max-w-3xl text-[1.05rem] leading-relaxed text-muted">
+      Beyond technology, I value community involvement, social impact,
+      knowledge sharing, and initiatives that bring people together.
+      These experiences have allowed me to contribute, collaborate,
+      and grow beyond the academic environment.
+    </p>
+
+    <div class="mt-8 space-y-12">
+      {communityActivities.map((activity) => (
+        <article>
+          <p class="text-sm font-medium text-muted">{activity.category}</p>
+
+          <h3 class="mt-1 font-serif text-xl font-semibold">
+            {activity.title}
+          </h3>
+
+          <p class="mt-3 max-w-3xl leading-relaxed">
+            {activity.description}
+          </p>
+
+          <div
+            class:list={[
+              'mt-5 grid gap-4',
+              activity.images.length === 1
+                ? 'grid-cols-1 max-w-md'
+                : 'grid-cols-1 sm:grid-cols-3',
+            ]}
+          >
+            {activity.images.map((src, index) => (
+              <img
+                src={src}
+                alt={`${activity.title} — photo ${index + 1}`}
+                class="h-56 w-full rounded-xl border border-line object-cover"
+                loading="lazy"
+              />
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- Selected Writing -->
   {
     writing.length > 0 && (
       <section class="mt-14">
         <h2 class="section-title">Selected Writing</h2>
+
         <ul class="list-disc space-y-3 pl-5 marker:text-slate-400">
           {writing.map((w) => (
             <li class="text-[1.05rem]">
-              <a href={`/writing/${w.slug}/`} class="link">{w.data.title}</a>
-              <span class="ml-2 text-sm italic text-muted">{formatDate(w.data.date)}</span>
+              <a href={`/writing/${w.slug}/`} class="link">
+                {w.data.title}
+              </a>
+              <span class="ml-2 text-sm italic text-muted">
+                {formatDate(w.data.date)}
+              </span>
             </li>
           ))}
         </ul>
+
         <p class="mt-4 text-[0.95rem]">
           <a href="/writing/" class="link">All writing →</a>
         </p>
